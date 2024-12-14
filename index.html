@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo List Frontend</title>
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            padding: 20px;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1, h3, h2 {
+            color: #444;
+        }
+
+        /* Sidebar Container */
+        .sidebar {
+            width: 20%;
+            max-width: 300px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .sidebar h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .sidebar .container {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        .sidebar button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .sidebar button:hover {
+            background-color: #0056b3;
+        }
+
+        input, textarea {
+            margin-bottom: 10px;
+            width: calc(100% - 10px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        /* Tasks Section */
+        .tasks-container {
+            flex-grow: 1;
+            max-width: 80%;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        .tasks-container h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        /* Task Card Styles */
+        .task-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .task-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .task-card input, .task-card textarea, .task-card select {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .task-card button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 10px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .task-card button.delete-task {
+            background-color: #dc3545;
+        }
+
+        .task-card button.delete-task:hover {
+            background-color: #c82333;
+        }
+
+        .task-card button:hover {
+            background-color: #218838;
+        }
+
+        .task-card input[readonly] {
+            background-color: #f1f1f1;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h1>ToDo List</h1>
+
+        <div class="container">
+            <h3>Fetch All Tasks</h3>
+            <button id="getAllTasks">Get All Tasks</button>
+        </div>
+
+        <div class="container">
+            <h3>Add New Task</h3>
+            <input type="text" id="newTaskTitle" placeholder="Enter task title" required><br>
+            <textarea id="newTaskDescription" placeholder="Task description"></textarea><br>
+            <select id="newTaskStatus"></select><br>
+            <input type="text" id="newTaskAssignedTo" placeholder="Assigned to"><br>
+            <input type="date" id="newTaskDueDate" placeholder="Due date"><br>
+            <button id="addTask">Add Task</button>
+        </div>
+    </div>
+
+    <div class="tasks-container" id="tasks">
+        <h2>Tasks</h2>
+        <div class="tasks-grid">
+            <!-- Tasks will appear here -->
+        </div>
+    </div>
+
+    <script>
+        //const apiUrl = 'https://localhost:7206/';
+		const apiUrl = 'https://mytodolist-hrfjfcexeubrbrcs.polandcentral-01.azurewebsites.net/';
+        let cachedStatuses = null;
+
+        // Fetch statuses for dropdown
+        async function fetchStatuses() {
+            if (cachedStatuses) {
+                return cachedStatuses;
+            }
+            try {
+                const response = await fetch(`${apiUrl}Statuses`);
+                const statusesResponse = await response.json();
+                cachedStatuses = statusesResponse.map(status => status.status);
+                return cachedStatuses;
+            } catch (error) {
+                console.error('Error fetching statuses:', error);
+                return [];
+            }
+        }
+
+        // Populate dropdowns with statuses
+        async function populateStatusDropdowns() {
+            const statuses = await fetchStatuses();
+            const statusDropdowns = document.querySelectorAll('select.task-status, #newTaskStatus');
+            statusDropdowns.forEach(dropdown => {
+                dropdown.innerHTML = statuses.map(status => `<option value="${status}">${status}</option>`).join('');
+            });
+        }
+
+        // Fetch all tasks
+        document.getElementById('getAllTasks').addEventListener('click', async () => {
+            try {
+                const response = await fetch(`${apiUrl}tasks`);
+                const tasks = await response.json();
+
+                const groupedTasks = tasks.reduce((acc, task) => {
+                    acc[task.status] = acc[task.status] || [];
+                    acc[task.status].push(task);
+                    return acc;
+                }, {});
+
+                const tasksGrid = document.querySelector('.tasks-grid');
+                tasksGrid.innerHTML = Object.keys(groupedTasks).map(status => `
+                    <div class="task-group">
+                        <h3>${status}</h3>
+                        ${groupedTasks[status].map(task => `
+                            <div class="task-card" data-task-id="${task.taskId}">
+                                <label>Task ID:</label>
+                                <input type="text" class="task-id" value="${task.taskId}" readonly>
+
+                                <label>Title:</label>
+                                <input type="text" class="task-title" value="${task.title}">
+
+                                <label>Status:</label>
+                                <select class="task-status">
+                                    ${cachedStatuses.map(statusOption => `<option value="${statusOption}" ${statusOption === task.status ? 'selected' : ''}>${statusOption}</option>`).join('')}
+                                </select>
+
+                                <label>Assigned to:</label>
+                                <input type="text" class="task-assigned-to" value="${task.assignedTo || ''}">
+
+                                <label>Description:</label>
+                                <textarea class="task-description">${task.description || ''}</textarea>
+
+                                <label>Due date:</label>
+                                <input type="date" class="task-due-date" value="${task.dueDate || ''}">
+
+                                <button class="update-task">Update</button>
+                                <button class="delete-task">Delete</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                `).join('');
+
+                addUpdateListeners();
+            } catch (error) {
+                console.error('Error fetching tasks:', error);
+            }
+        });
+
+        // Add new task
+        document.getElementById('addTask').addEventListener('click', async () => {
+            const title = document.getElementById('newTaskTitle').value;
+            const description = document.getElementById('newTaskDescription').value;
+            const status = document.getElementById('newTaskStatus').value;
+            const assignedTo = document.getElementById('newTaskAssignedTo').value;
+            const dueDate = document.getElementById('newTaskDueDate').value;
+
+            if (!title) return alert('Task title is required!');
+
+            try {
+                const response = await fetch(`${apiUrl}tasks`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        Title: title,
+                        Status: status || null,
+                        AssignedTo: assignedTo || null,
+                        Description: description || null,
+                        DueDate: dueDate || null
+                    })
+                });
+                document.getElementById('getAllTasks').click();
+            } catch (error) {
+                console.error('Error adding task:', error);
+            }
+        });
+
+        // Add listeners to update and delete task buttons
+        function addUpdateListeners() {
+            const updateButtons = document.querySelectorAll('.update-task');
+            const deleteButtons = document.querySelectorAll('.delete-task');
+
+            updateButtons.forEach(button => {
+                button.addEventListener('click', async (event) => {
+                    const taskCard = event.target.closest('.task-card');
+                    const taskId = taskCard.querySelector('.task-id').value;
+                    const title = taskCard.querySelector('.task-title').value;
+                    const status = taskCard.querySelector('.task-status').value;
+                    const assignedTo = taskCard.querySelector('.task-assigned-to').value;
+                    const description = taskCard.querySelector('.task-description').value;
+                    const dueDate = taskCard.querySelector('.task-due-date').value;
+
+                    if (!title) return alert('Task title is required!');
+
+                    try {
+                        await fetch(`${apiUrl}tasks/${taskId}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                TaskId: taskId,
+                                Title: title,
+                                Status: status || null,
+                                AssignedTo: assignedTo || null,
+                                Description: description || null,
+                                DueDate: dueDate || null
+                            })
+                        });
+                    } catch (error) {
+                        console.error('Error updating task:', error);
+                    } finally {
+                        document.getElementById('getAllTasks').click();
+                    }
+                });
+            });
+
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', async (event) => {
+                    const taskCard = event.target.closest('.task-card');
+                    const taskId = taskCard.querySelector('.task-id').value;
+
+                    try {
+                        await fetch(`${apiUrl}tasks/${taskId}`, {
+                            method: 'DELETE'
+                        });
+                    } catch (error) {
+                        console.error('Error deleting task:', error);
+                    } finally {
+                        document.getElementById('getAllTasks').click();
+                    }
+                });
+            });
+        }
+
+        // Initial load of statuses and tasks
+        populateStatusDropdowns();
+        document.getElementById('getAllTasks').click();
+    </script>
+</body>
+</html>

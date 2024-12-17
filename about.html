@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About This Project</title>
+    <style>
+                body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        h1, h3, h2 {
+            color: #444;
+        }
+
+        /* Main Container for the App */
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-container h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Task Addition & Fetch Section */
+        .container {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        .container button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .container button:hover {
+            background-color: #0056b3;
+        }
+
+        input, textarea {
+            margin-bottom: 10px;
+            width: calc(100% - 10px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        /* Tasks Grid */
+        .tasks-container {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .tasks-container h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        /* Task Card Styles */
+        .task-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .task-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .task-card input, .task-card textarea {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .task-card button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 10px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .task-card button:hover {
+            background-color: #218838;
+        }
+
+        .task-card input[readonly] {
+            background-color: #f1f1f1;
+            cursor: not-allowed;
+        }
+        .login-container {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .login-container button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .login-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .menu-bar {
+            display: flex;
+            justify-content: space-between;
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .menu-bar a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-bar">
+        <a href="index.html">Home</a>
+        <a href="about.html">About This Project</a>
+    </div>
+    <header>
+        <h1>About This Project</h1>
+    </header>
+    
+    <main>
+        <section>
+            <h2>Project Overview</h2>
+            <p>MyToDoList is a task management application built with ASP.NET for the backend and hosted on GitHub Pages for the frontend. User authentication is handled via Entra ID, ensuring secure access.
+
+                The application stores task data in an Azure SQL Database, supporting CRUD operations (Create, Read, Update, Delete). The ASP.NET API communicates with the database to manage tasks, while the frontend interacts with the backend through API calls. The app allows users to add, update, and delete tasks, with all data securely stored in the cloud.</p>
+        </section>
+        <section>
+            <h2>How to Use</h2>
+            <p>To fully test the application's functionality, please log in using the credentials provided by the author. Accessing all features requires authentication.</p>
+            <p><strong>Note:</strong> If you do not have credentials, please contact the project author for access details.</p>
+        </section>
+        <section>
+            <h2>Contact</h2>
+            <p>If you have any questions or require credentials, please reach out to the author at:</p>
+            <p><strong>Email:</strong>danieljakubas94@gmail.com</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 MyToDoList. All Rights Reserved. | Designed by </p>
+    </footer>
+</body>
+</html>

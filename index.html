@@ -189,7 +189,7 @@
             <h3>Add New Task</h3>
             <input type="text" id="newTaskTitle" placeholder="Enter task title" required><br>
             <textarea id="newTaskDescription" placeholder="Task description"></textarea><br>
-            <input type="text" id="newTaskStatus" placeholder="Status"><br>
+            
             <input type="text" id="newTaskAssignedTo" placeholder="Assigned to"><br>
             <input type="date" id="newTaskDueDate" placeholder="Due date"><br>
             <button id="addTask">Add Task</button>
@@ -321,11 +321,12 @@ const config = {
         });
         document.addEventListener('DOMContentLoaded', handleRedirect);
 
-        const token = sessionStorage.getItem('access_token');
+        
 
         // Fetch all tasks
         document.getElementById('getAllTasks').addEventListener('click', async () => {
             try {
+                const token = sessionStorage.getItem('access_token');
                 const response = await fetch(`${config.apiUrl}tasks`, {
             method: 'GET',
             headers: {
@@ -375,6 +376,7 @@ const config = {
             if (!title) return alert('Task title is required!');
 
             try {
+                const token = sessionStorage.getItem('access_token');
                 const response = await fetch(`${config.apiUrl}tasks`, {
                 method: 'POST',
                 headers: {

@@ -324,7 +324,7 @@ const config = {
         // Fetch all tasks
         document.getElementById('getAllTasks').addEventListener('click', async () => {
             try {
-                const response = await fetch(`${apiUrl}tasks`);
+                const response = await fetch(`${config.apiUrl}tasks`);
                 const tasks = await response.json();
                 const tasksGrid = document.querySelector('.tasks-grid');
                 tasksGrid.innerHTML = tasks.map(task => `
@@ -361,19 +361,17 @@ const config = {
         document.getElementById('addTask').addEventListener('click', async () => {
             const title = document.getElementById('newTaskTitle').value;
             const description = document.getElementById('newTaskDescription').value;
-            const status = document.getElementById('newTaskStatus').value;
             const assignedTo = document.getElementById('newTaskAssignedTo').value;
             const dueDate = document.getElementById('newTaskDueDate').value;
 
             if (!title) return alert('Task title is required!');
 
             try {
-                const response = await fetch(`${apiUrl}tasks`, {
+                const response = await fetch(`${config.apiUrl}tasks`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         Title: title,
-                        Status: status || null,
                         AssignedTo: assignedTo || null,
                         Description: description || null,
                         DueDate: dueDate || null
@@ -406,7 +404,7 @@ const config = {
                     if (!title) return alert('Task title is required!');
 
                     try {
-                        const response = await fetch(`${apiUrl}tasks/${taskId}`, {
+                        const response = await fetch(`${config.apiUrl}tasks/${taskId}`, {
                             method: 'PUT',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({

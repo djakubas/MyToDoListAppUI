@@ -407,6 +407,7 @@ const config = {
     updateButtons.forEach(button => {
         button.addEventListener('click', async (event) => {
             const token = sessionStorage.getItem('access_token');
+            console.log(token);
             if (!token) return alert('Please log in first!');
 
                     const taskCard = event.target.closest('.task-card');
@@ -422,7 +423,8 @@ const config = {
                     try {
                         const response = await fetch(`${config.apiUrl}tasks/${taskId}`, {
                             method: 'PUT',
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: { 'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`},
                             body: JSON.stringify({
 								TaskId: taskId,
                                 Title: title,
@@ -449,6 +451,7 @@ const config = {
     deleteButtons.forEach(button => {
         button.addEventListener('click', async (event) => {
             const token = sessionStorage.getItem('access_token');
+            console.log(token);
             if (!token) return alert('Please log in first!');
 
             const taskCard = event.target.closest('.task-card');

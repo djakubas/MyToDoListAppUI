@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ToDo List Frontend</title>
+    <title>MyToDoList</title>
     <style>
         /* General Body Styles */
         body {
@@ -170,8 +170,8 @@
 <body>
 
     <div class="menu-bar">
-        <a href="index.html">Home</a>
-        <a href="about.html">About This Project</a>
+        <a href="https://djakubas.github.io/MyToDoListAppUI">Home</a>
+        <a href="https://djakubas.github.io/MyToDoListAppUI/about.html">About This Project</a>
     </div>
     <div class="main-container">
         <h1>ToDo List</h1>
@@ -322,7 +322,7 @@ const config = {
         document.addEventListener('DOMContentLoaded', handleRedirect);
 
         const token = sessionStorage.getItem('access_token');
-        
+
         // Fetch all tasks
         document.getElementById('getAllTasks').addEventListener('click', async () => {
             try {

@@ -321,6 +321,8 @@ const config = {
         });
         document.addEventListener('DOMContentLoaded', handleRedirect);
 
+        const token = sessionStorage.getItem('access_token');
+        
         // Fetch all tasks
         document.getElementById('getAllTasks').addEventListener('click', async () => {
             try {

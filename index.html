@@ -381,7 +381,7 @@ const config = {
                 method: 'POST',
                 headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `Bearer ${token}`
             },
                     body: JSON.stringify({
                         Title: title,
@@ -424,7 +424,7 @@ const config = {
                         const response = await fetch(`${config.apiUrl}tasks/${taskId}`, {
                             method: 'PUT',
                             headers: { 'Content-Type': 'application/json',
-                            'Authorization': 'Bearer ${token}'},
+                            'Authorization': `Bearer ${token}`,},
                             body: JSON.stringify({
 								TaskId: taskId,
                                 Title: title,

@@ -4,10 +4,134 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToDo List Frontend</title>
-    <script src="https://alcdn.msauth.net/browser/2.31.0/js/msal-browser.min.js"></script>
     <style>
-        /* Your existing styles remain unchanged */
+        /* General Body Styles */
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 20px;
+            padding: 20px;
+        }
 
+        h1, h3, h2 {
+            color: #444;
+        }
+
+        /* Main Container for the App */
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-container h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Task Addition & Fetch Section */
+        .container {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        .container button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .container button:hover {
+            background-color: #0056b3;
+        }
+
+        input, textarea {
+            margin-bottom: 10px;
+            width: calc(100% - 10px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        /* Tasks Grid */
+        .tasks-container {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .tasks-container h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        /* Task Card Styles */
+        .task-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .task-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .task-card input, .task-card textarea {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .task-card button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 10px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .task-card button:hover {
+            background-color: #218838;
+        }
+
+        .task-card input[readonly] {
+            background-color: #f1f1f1;
+            cursor: not-allowed;
+        }
         .login-container {
             text-align: center;
             margin-bottom: 10px;
@@ -44,22 +168,18 @@
     </style>
 </head>
 <body>
-    <!-- Menu Bar -->
+
     <div class="menu-bar">
         <a href="index.html">Home</a>
         <a href="about.html">About This Project</a>
     </div>
-
-    <!-- Login Section -->
-    <div class="login-container">
-        <button id="loginButton">Login</button>
-        <button id="logoutButton" style="display:none;">Logout</button>
-        <p id="userName"></p>
-    </div>
-
-    <!-- Sidebar Section -->
-    <div class="sidebar">
+    <div class="main-container">
         <h1>ToDo List</h1>
+        <div class="login-container">
+            <button id="loginButton">Login</button>
+            <button id="logoutButton" style="display:none;">Logout</button>
+            <p id="userName"></p>
+        </div>
         <div class="container">
             <h3>Fetch All Tasks</h3>
             <button id="getAllTasks">Get All Tasks</button>
@@ -69,20 +189,23 @@
             <h3>Add New Task</h3>
             <input type="text" id="newTaskTitle" placeholder="Enter task title" required><br>
             <textarea id="newTaskDescription" placeholder="Task description"></textarea><br>
+            <input type="text" id="newTaskStatus" placeholder="Status"><br>
             <input type="text" id="newTaskAssignedTo" placeholder="Assigned to"><br>
             <input type="date" id="newTaskDueDate" placeholder="Due date"><br>
             <button id="addTask">Add Task</button>
         </div>
     </div>
 
-    <!-- Tasks Section -->
     <div class="tasks-container" id="tasks">
         <h2>Tasks</h2>
-        <div class="tasks-grid"></div>
+        <div class="tasks-grid">
+            <!-- Tasks will appear here -->
+        </div>
     </div>
 
     <script>
-        const config = {
+
+const config = {
             clientId: "cfae89da-a3c1-493c-b5bf-119911c83a01", // Your current ClientId
             tenantId: "be030616-78c0-481d-bcd0-9d07452a14c2", // Your current TenantId
             redirectUri: "https://djakubas.github.io/MyToDoListAppUI",
@@ -198,45 +321,113 @@
         });
         document.addEventListener('DOMContentLoaded', handleRedirect);
 
-        // Fetch All Tasks
-        document.getElementById("getAllTasks").addEventListener("click", async () => {
+        // Fetch all tasks
+        document.getElementById('getAllTasks').addEventListener('click', async () => {
             try {
-                const response = await fetchWithAuth(`${config.apiUrl}`);
+                const response = await fetch(`${apiUrl}tasks`);
                 const tasks = await response.json();
-                console.log("Tasks fetched securely:", tasks);
+                const tasksGrid = document.querySelector('.tasks-grid');
+                tasksGrid.innerHTML = tasks.map(task => `
+                    <div class="task-card" data-task-id="${task.taskId}">
+                        <label>Task ID:</label>
+                        <input type="text" class="task-id" value="${task.taskId}" readonly>
+                        
+                        <label>Title:</label>
+                        <input type="text" class="task-title" value="${task.title}">
+                        
+                        <label>Status:</label>
+                        <input type="text" class="task-status" value="${task.status || ''}">
+                        
+                        <label>Assigned to:</label>
+                        <input type="text" class="task-assigned-to" value="${task.assignedTo || ''}">
+                        
+                        <label>Description:</label>
+                        <textarea class="task-description">${task.description || ''}</textarea>
+                        
+                        <label>Due date:</label>
+                        <input type="date" class="task-due-date" value="${task.dueDate || ''}">
+                        
+                        <button class="update-task">Update</button>
+                    </div>
+                `).join('');
+                
+                addUpdateListeners();
             } catch (error) {
-                console.error("Error fetching tasks:", error);
+                console.error('Error fetching tasks:', error);
             }
         });
 
-        // Add Task
-        document.getElementById("addTask").addEventListener("click", async () => {
-            const title = document.getElementById("newTaskTitle").value;
-            if (!title) return alert("Task title is required!");
+        // Add new task
+        document.getElementById('addTask').addEventListener('click', async () => {
+            const title = document.getElementById('newTaskTitle').value;
+            const description = document.getElementById('newTaskDescription').value;
+            const status = document.getElementById('newTaskStatus').value;
+            const assignedTo = document.getElementById('newTaskAssignedTo').value;
+            const dueDate = document.getElementById('newTaskDueDate').value;
+
+            if (!title) return alert('Task title is required!');
 
             try {
-                await fetchWithAuth(`${config.apiUrl}`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ Title: title })
+                const response = await fetch(`${apiUrl}tasks`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        Title: title,
+                        Status: status || null,
+                        AssignedTo: assignedTo || null,
+                        Description: description || null,
+                        DueDate: dueDate || null
+                    })
                 });
-                alert("Task added successfully!");
+                if (response.ok) {
+                    alert('Task added successfully!');
+                    document.getElementById('getAllTasks').click();
+                } else {
+                    alert('Error adding task.');
+                }
             } catch (error) {
-                console.error("Error adding task:", error);
+                console.error('Error adding task:', error);
             }
         });
 
-        async function fetchWithAuth(url, options = {}) {
-            let token = sessionStorage.getItem('access_token');
-            if (!token) {
-                alert('Please login to acquire an access token.');
-                return;
-            }
-            options.headers = {
-                ...options.headers,
-                Authorization: `Bearer ${token}`
-            };
-            return fetch(url, options);
+        // Add listeners to update task buttons
+        function addUpdateListeners() {
+            const updateButtons = document.querySelectorAll('.update-task');
+            updateButtons.forEach(button => {
+                button.addEventListener('click', async (event) => {
+                    const taskCard = event.target.closest('.task-card');
+                    const taskId = taskCard.querySelector('.task-id').value;
+                    const title = taskCard.querySelector('.task-title').value;
+                    const status = taskCard.querySelector('.task-status').value;
+                    const assignedTo = taskCard.querySelector('.task-assigned-to').value;
+                    const description = taskCard.querySelector('.task-description').value;
+                    const dueDate = taskCard.querySelector('.task-due-date').value;
+
+                    if (!title) return alert('Task title is required!');
+
+                    try {
+                        const response = await fetch(`${apiUrl}tasks/${taskId}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+								TaskId: taskId,
+                                Title: title,
+                                Status: status || null,
+                                AssignedTo: assignedTo || null,
+                                Description: description || null,
+                                DueDate: dueDate || null
+                            })
+                        });
+                        if (response.ok) {
+                            alert('Task updated successfully!');
+                        } else {
+                            alert('Error updating task.');
+                        }
+                    } catch (error) {
+                        console.error('Error updating task:', error);
+                    }
+                });
+            });
         }
     </script>
 </body>

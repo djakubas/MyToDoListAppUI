@@ -9,7 +9,7 @@
             font-family: 'Roboto', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
+            background-color: white;
             color: #333;
             display: flex;
             flex-direction: column;
@@ -27,7 +27,7 @@
         .main-container {
             width: 100%;
             max-width: 1200px;
-            background: #fff;
+            background: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -39,28 +39,7 @@
             text-align: center;
         }
 
-        /* Task Addition & Fetch Section */
-        .container {
-            margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #fafafa;
-        }
 
-        .container button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            font-size: 14px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .container button:hover {
-            background-color: #0056b3;
-        }
 
         input, textarea {
             margin-bottom: 10px;
@@ -75,80 +54,7 @@
             outline: none;
         }
 
-        /* Tasks Grid */
-        .tasks-container {
-            width: 100%;
-            max-width: 1200px;
-        }
-
-        .tasks-container h2 {
-            font-size: 22px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .tasks-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        /* Task Card Styles */
-        .task-card {
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .task-card:hover {
-            transform: scale(1.03);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .task-card input, .task-card textarea {
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        .task-card button {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 8px 10px;
-            font-size: 14px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .task-card button:hover {
-            background-color: #218838;
-        }
-
-        .task-card input[readonly] {
-            background-color: #f1f1f1;
-            cursor: not-allowed;
-        }
-        .login-container {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .login-container button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            font-size: 14px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .login-container button:hover {
-            background-color: #0056b3;
-        }
+       
 
         .menu-bar {
             display: flex;
@@ -164,6 +70,18 @@
             font-weight: bold;
             margin-right: 20px;
         }
+        .image-container {
+      width: 80%; /* Makes image take up 80% of the page width */
+      max-width: 1000px; /* Sets a max width for the image */
+      height: auto;
+      overflow: hidden;
+    }
+
+    img {
+      width: 100%; /* Makes the image scale to the container's width */
+      height: auto; /* Keeps the aspect ratio intact */
+      object-fit: cover; /* Ensures the image covers the area without distortion */
+    }
     </style>
 </head>
 <body>
@@ -181,6 +99,9 @@
             <p>MyToDoList is a task management application built with ASP.NET for the backend and hosted on GitHub Pages for the frontend. User authentication is handled via Entra ID, ensuring secure access.
 
                 The application stores task data in an Azure SQL Database, supporting CRUD operations (Create, Read, Update, Delete). The ASP.NET API communicates with the database to manage tasks, while the frontend interacts with the backend through API calls. The app allows users to add, update, and delete tasks, with all data securely stored in the cloud.</p>
+                <div class="image-container">
+                    <img src="graph.png" alt="MyToDoList Design">
+                </div>
         </section>
         <section>
             <h2>How to Use</h2>

@@ -324,7 +324,12 @@ const config = {
         // Fetch all tasks
         document.getElementById('getAllTasks').addEventListener('click', async () => {
             try {
-                const response = await fetch(`${config.apiUrl}tasks`);
+                const response = await fetch(`${config.apiUrl}tasks`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
                 const tasks = await response.json();
                 const tasksGrid = document.querySelector('.tasks-grid');
                 tasksGrid.innerHTML = tasks.map(task => `
@@ -368,8 +373,11 @@ const config = {
 
             try {
                 const response = await fetch(`${config.apiUrl}tasks`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
                     body: JSON.stringify({
                         Title: title,
                         AssignedTo: assignedTo || null,
@@ -391,8 +399,11 @@ const config = {
         // Add listeners to update task buttons
         function addUpdateListeners() {
             const updateButtons = document.querySelectorAll('.update-task');
-            updateButtons.forEach(button => {
-                button.addEventListener('click', async (event) => {
+    updateButtons.forEach(button => {
+        button.addEventListener('click', async (event) => {
+            const token = sessionStorage.getItem('access_token');
+            if (!token) return alert('Please log in first!');
+
                     const taskCard = event.target.closest('.task-card');
                     const taskId = taskCard.querySelector('.task-id').value;
                     const title = taskCard.querySelector('.task-title').value;

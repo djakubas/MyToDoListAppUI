@@ -342,7 +342,7 @@ const config = {
                 statusesCache = await responseStatuses.json();
                 sessionStorage.setItem('statuses_cache',statusesCache)
                 //console.log('Statuses cached:', statusesCache);
-                const statusesCache = sessionStorage.getItem('statuses_cache');
+                //const statusesCache = sessionStorage.getItem('statuses_cache');
                 const tasks = await response.json();
                 const tasksGrid = document.querySelector('.tasks-grid');
                 tasksGrid.innerHTML = tasks.map(task => `

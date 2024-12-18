@@ -333,6 +333,24 @@ const config = {
                 'Authorization': `Bearer ${token}`,
             },
         });
+        const fetchStatuses = async () => {
+            const token = sessionStorage.getItem('access_token');
+            if (!token) return;
+    
+            try {
+                const response = await fetch(`${config.apiUrl}statuses`, {
+                    method: 'GET',
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (!response.ok) throw new Error(`Failed to fetch statuses: ${response.status}`);
+    
+                statusesCache = await response.json();
+                console.log('Statuses cached:', statusesCache);
+            } catch (error) {
+                console.error('Error fetching statuses:', error);
+            }
+        };
+
                 const tasks = await response.json();
                 const tasksGrid = document.querySelector('.tasks-grid');
                 tasksGrid.innerHTML = tasks.map(task => `
@@ -344,7 +362,12 @@ const config = {
                         <input type="text" class="task-title" value="${task.title}">
                         
                         <label>Status:</label>
-                        <input type="text" class="task-status" value="${task.status || ''}">
+                        <select class="task-status">
+                            ${statusesCache.map(status => `
+                                <option value="${status}" ${task.status === status ? 'selected' : ''}>
+                                    ${status}
+                                </option>`).join('')}
+                        </select>
                         
                         <label>Assigned to:</label>
                         <input type="text" class="task-assigned-to" value="${task.assignedTo || ''}">

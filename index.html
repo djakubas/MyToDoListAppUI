@@ -356,7 +356,7 @@ const config = {
                         <label>Status:</label>
                         <select class="task-status">
                             ${statusesCache.map(status => `
-                                <option value="${status.status}" ${taskStatus === status.status ? 'selected' : ''}>
+                                <option value="${status.status}" ${task.status === status.status ? 'selected' : ''}>
                                     ${status.status}
                                 </option>`).join('')}
                         </select>
